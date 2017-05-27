@@ -3,9 +3,9 @@
   <p-checkbox (onChange)="onChangeSuppliersFilter()" name="suppliersFilter" label={{filter}} value={{filter}} [(ngModel)]="selectedValues"></p-checkbox>
 </div>
 <hr/>
-<p-dataTable [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" 
+<p-dataTable [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()"
 dataKey="oreder_id" [editable]="true" >
-  <p-column selectionMode="multiple" (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()"></p-column>
+  <p-column selectionMode="multiple" ></p-column>
   <p-column field="code" header="code"></p-column>
   <p-column field="producer" header="producer"></p-column>
   <p-column field="name" header="name"></p-column>
@@ -16,7 +16,7 @@ dataKey="oreder_id" [editable]="true" >
   <p-column field="delivery_time" header="delivery time"></p-column>
   <p-column field="status" header="status" [editable]="true" [style]="{'overflow':'visible'}">
     <ng-template let-col let-order="rowData" pTemplate="editor">
-      <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatuses" [autoWidth]="false" [style]="{'width':'100%'}" required="true">
+      <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatuses" [autoWidth]="false" [style]="{'width':'100%'}" required="true" (onChange)="onStatusChange(order)">
       </p-dropdown>
     </ng-template>
   </p-column>
