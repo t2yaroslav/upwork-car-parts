@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import {CheckboxModule, DropdownModule} from 'primeng/primeng';
-import {DataTableModule, SharedModule} from 'primeng/primeng';
+import {CheckboxModule, DropdownModule, ToolbarModule} from 'primeng/primeng';
+import {DataTableModule, SharedModule, ListboxModule, OverlayPanelModule, ChipsModule} from 'primeng/primeng';
 
 import {Order} from '../models/order';
 
@@ -17,7 +17,7 @@ declare var saveAs;
 
 export class OrdersBoardComponent implements OnInit {
   selectedValues: string[] = [];
-  suppliersFilter: string[] = ['lalavto', 'avtocompania', 'alex-avto'];
+  suppliersFilter: any[] = ['lalavto', 'avtocompania', 'alex-avto'];
 
   orderStatuses: any[] = ['new', 'read', 'in work', 'started in 1s', 'sent to the supplier', 'came to the supplier'];
 
@@ -29,7 +29,7 @@ export class OrdersBoardComponent implements OnInit {
   ngOnInit() {
     // convert to dropdown required format
     this.orderStatuses = this.orderStatuses.map(status => {return{label: status, value: status}});
-
+    this.suppliersFilter = this.suppliersFilter.map(supplier => {return{label: supplier, value: supplier}});
     console.log(JSON.stringify(this.orderStatuses));
     for (let index = 0; index < 9; index++) {
       this.orders.push({oreder_id: index, order_date: '25.04.2015', code: '5413',
@@ -39,7 +39,7 @@ export class OrdersBoardComponent implements OnInit {
   }
 
   onChangeSuppliersFilter(checked) {
-    // console.log(JSON.stringify(this.selectedValues));
+    console.log(JSON.stringify(this.selectedValues));
   }
 
   onSelectionChange() {

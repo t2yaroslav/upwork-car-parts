@@ -1,33 +1,39 @@
-<h3>Suppliers</h3>
-<div *ngFor="let filter of suppliersFilter">
-  <p-checkbox (onChange)="onChangeSuppliersFilter()" name="suppliersFilter" label={{filter}} value={{filter}} [(ngModel)]="selectedValues"></p-checkbox>
-</div>
-<hr/>
-<p-dataTable id="ordersTable" [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()"
+<p-toolbar>
+   <div class="ui-toolbar-group-left">
+      <button type="text" pButton label="Filters" icon="fa-filter" iconPos="left" (click)="op1.toggle($event)" style="float: left;"></button>
+      <p-overlayPanel #op1 >
+         <h4>Suppliers</h4>
+         <p-listbox [options]="suppliersFilter" [(ngModel)]="selectedValues" multiple="multiple" checkbox="checkbox" filter="filter"
+         (onChange)="onChangeSuppliersFilter()">
+         </p-listbox>
+      </p-overlayPanel>
+      <p-chips [(ngModel)]="selectedValues" [style]="{'float':'left'}" ></p-chips>
+   </div>
+   <div class="ui-toolbar-group-right">
+      <div class="ui-helper-clearfix">
+         <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float: right;"></button>
+         <button type="button" pButton icon="fa-clipboard" iconPos="left" label="Copy2Clipboard" (click)="onExcellExport()" style="float:right;"></button>
+         <button type="button" pButton icon="fa-file-excel-o" iconPos="left" label="Excell" (click)="onExcellExport()" style="float:right;"></button>
+      </div>
+   </div>
+</p-toolbar>
+<p-dataTable id="ordersTable" [value]="orders" [rows]="20" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()"
 dataKey="oreder_id" [editable]="true" #dt exportFilename="orders">
-  <p-header>
-    <div class="ui-helper-clearfix">
-      <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float: right;"></button>
-    </div>
-    <div class="ui-helper-clearfix">
-      <button type="button" pButton icon="fa-file-o" iconPos="left" label="Excell" (click)="onExcellExport()" style="float:right;"></button>
-    </div>
-  </p-header>
-  <p-column selectionMode="multiple" ></p-column>
-  <p-column field="code" header="code"></p-column>
-  <p-column field="producer" header="producer"></p-column>
-  <p-column field="name" header="name"></p-column>
-  <p-column field="quantity" header="quantity"></p-column>
-  <p-column field="price" header="price" [editable]="true"></p-column>
-  <p-column field="vendor_price" header="vendor price" [editable]="true"></p-column>
-  <p-column field="balance" header="balance"></p-column>
-  <p-column field="delivery_time" header="delivery time"></p-column>
-  <p-column field="status" header="status" [editable]="true" [style]="{'overflow':'visible'}">
-    <ng-template let-col let-order="rowData" pTemplate="editor">
-      <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatuses" [autoWidth]="false" [style]="{'width':'100%'}" required="true" (onChange)="onStatusChange(order)">
-      </p-dropdown>
-    </ng-template>
-  </p-column>
-  <p-column field="oreder_id" header="oreder id"></p-column>
-  <p-column field="order_date" header="order date"></p-column>
+<p-column selectionMode="multiple" ></p-column>
+<p-column field="code" header="code"></p-column>
+<p-column field="producer" header="producer"></p-column>
+<p-column field="name" header="name"></p-column>
+<p-column field="quantity" header="quantity"></p-column>
+<p-column field="price" header="price" [editable]="true"></p-column>
+<p-column field="vendor_price" header="vendor price" [editable]="true"></p-column>
+<p-column field="balance" header="balance"></p-column>
+<p-column field="delivery_time" header="delivery time"></p-column>
+<p-column field="status" header="status" [editable]="true" [style]="{'overflow':'visible'}">
+<ng-template let-col let-order="rowData" pTemplate="editor">
+   <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatuses" [autoWidth]="false" [style]="{'width':'100%'}" required="true" (onChange)="onStatusChange(order)">
+   </p-dropdown>
+</ng-template>
+</p-column>
+<p-column field="oreder_id" header="oreder id"></p-column>
+<p-column field="order_date" header="order date"></p-column>
 </p-dataTable>
