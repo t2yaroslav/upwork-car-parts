@@ -3,8 +3,16 @@
   <p-checkbox (onChange)="onChangeSuppliersFilter()" name="suppliersFilter" label={{filter}} value={{filter}} [(ngModel)]="selectedValues"></p-checkbox>
 </div>
 <hr/>
-<p-dataTable [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()"
-dataKey="oreder_id" [editable]="true" >
+<p-dataTable id="ordersTable" [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()"
+dataKey="oreder_id" [editable]="true" #dt exportFilename="orders">
+  <p-header>
+    <div class="ui-helper-clearfix">
+      <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float: right;"></button>
+    </div>
+    <div class="ui-helper-clearfix">
+      <button type="button" pButton icon="fa-file-o" iconPos="left" label="Excell" (click)="onExcellExport()" style="float:right;"></button>
+    </div>
+  </p-header>
   <p-column selectionMode="multiple" ></p-column>
   <p-column field="code" header="code"></p-column>
   <p-column field="producer" header="producer"></p-column>
