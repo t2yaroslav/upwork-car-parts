@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import {CheckboxModule, DropdownModule, ToolbarModule} from 'primeng/primeng';
 import {DataTableModule, SharedModule, ListboxModule, OverlayPanelModule, ChipsModule} from 'primeng/primeng';
-import { ODataConfiguration, ODataServiceFactory, ODataService } from 'angular2-odata';
 import {Order} from '../models/order';
 import { Http, JsonpModule } from '@angular/http';
 
@@ -17,7 +16,6 @@ declare var saveAs;
 })
 
 export class OrdersBoardComponent implements OnInit {
-  private odata: ODataService<Order>;
 
   suppliersFilter: any[] = [];
   suppliersFilterSelected: any[] = [];
@@ -31,12 +29,11 @@ export class OrdersBoardComponent implements OnInit {
   orders: Order[] = [];
   selectedOrders: Order[] = [];
   totalOrders: Number = 10;
+  orderStatusesDropBox: any = [];
 
   constructor(
-    private odataFactory: ODataServiceFactory,
     private http: Http
   ) {
-    this.odata = this.odataFactory.CreateService<Order>('OrderItems');
   }
 
   ngOnInit() {
@@ -54,7 +51,7 @@ export class OrdersBoardComponent implements OnInit {
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
-        statuses => this.statusesFilter = statuses.value.map(status => {return{label: status.Name, value: status.Id}}),
+        statuses => this.orderStatusesDropBox = this.statusesFilter = statuses.value.map(status => {return{label: status.Name, value: status.Id}}),
         error => console.log(`Fetch statuses error: ${error.message}`)
       );
 
@@ -135,41 +132,66 @@ export class OrdersBoardComponent implements OnInit {
 
   onApplyFilters() {
     console.log('onApplyFilters');
-        this.odata
-        .Query()// Creates a query object
-        // .Top(event.rows)
-        // .Skip(event.first)
-        // .Expand("Comment,From")
-        // .OrderBy("SendDate desc")
-        .Filter(this.prepareOdataFilterString())
-        .Exec()                     // Fires the request
-        .subscribe(                 // Subscribes to Observable<Array<T>>
-        orders => {
-            this.orders = orders;
-        },
-        error => {
-            console.log('oData load orders error');
-        });
+    let filtersStr = this.prepareOdataFilterString();
+    if (filtersStr !== '') {
+       filtersStr =  `$filter=${filtersStr}`;
+    }
+
+    this.http.get(`http://dev.avtokompaniya.ru/api/OrderItems?${filtersStr}`)
+      .map(res => res.json())
+      .subscribe(
+        // convert to dropdown required format
+        orderitems => this.orders = orderitems.value,
+        error => console.log(`Fetch orderitems error: ${error.message}`)
+      );
+
+        // this.odata
+        // .Query()// Creates a query object
+        // // .Top(event.rows)
+        // // .Skip(event.first)
+        // // .Expand("Comment,From")
+        // // .OrderBy("SendDate desc")
+        // .Filter(this.prepareOdataFilterString())
+        // .Exec()                     // Fires the request
+        // .subscribe(                 // Subscribes to Observable<Array<T>>
+        // orders => {
+        //     this.orders = orders;
+        // },
+        // error => {
+        //     console.log('oData load orders error');
+        // });
   }
 
   loadOrdersLazy(event) {
     console.log('load orders lazy');
-
-    this.odata
-        .Query()// Creates a query object
-        .Top(event.rows)
-        .Skip(event.first)
-        // .Expand("Comment,From")
-        // .OrderBy("SendDate desc")
-        .Filter(this.prepareOdataFilterString())
-        .Exec()                     // Fires the request
-        .subscribe(                 // Subscribes to Observable<Array<T>>
-        orders => {
-            this.orders = orders;
-        },
-        error => {
-            console.log('oData load orders error');
-        });
+    console.log('onApplyFilters');
+    let filtersStr = this.prepareOdataFilterString();
+    if (filtersStr !== '') {
+       filtersStr =  `$filter=${filtersStr}`;
+    }
+    // tslint:disable-next-line:max-line-length
+    this.http.get(`http://dev.avtokompaniya.ru/api/OrderItems?${filtersStr}&$top=${event.rows}&$skip=${event.first}`)
+      .map(res => res.json())
+      .subscribe(
+        // convert to dropdown required format
+        orderitems => this.orders = orderitems.value,
+        error => console.log(`Fetch orderitems error: ${error.message}`)
+      );
+    // this.odata
+    //     .Query()// Creates a query object
+    //     .Top(event.rows)
+    //     .Skip(event.first)
+    //     // .Expand("Comment,From")
+    //     // .OrderBy("SendDate desc")
+    //     .Filter(this.prepareOdataFilterString())
+    //     .Exec()                     // Fires the request
+    //     .subscribe(                 // Subscribes to Observable<Array<T>>
+    //     orders => {
+    //         this.orders = orders;
+    //     },
+    //     error => {
+    //         console.log('oData load orders error');
+    //     });
   }
 
   datenum(v, date1904 = null) {

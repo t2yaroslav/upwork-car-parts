@@ -73,7 +73,7 @@
       <p-column field="DeliveryTime" header="Время доставки"></p-column>
       <p-column field="Status" header="Статус" [editable]="true" [style]="{'overflow':'visible'}">
       <ng-template let-col let-order="rowData" pTemplate="editor">
-         <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatuses" [autoWidth]="false" [style]="{'width':'100%'}" required="true" (onChange)="onStatusChange(order)">
+         <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatusesDropBox" [autoWidth]="false" [style]="{'width':'100%'}" required="true" (onChange)="onStatusChange(order)">
          </p-dropdown>
       </ng-template>
       </p-column>

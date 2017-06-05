@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { OrdersBoardComponent } from './orders-board/orders-board.component';
 
 @Injectable()
-class MyODataConfig extends ODataConfiguration {
+export class MyODataConfig extends ODataConfiguration {
     baseUrl= 'http://dev.avtokompaniya.ru/api/';
 }
 
@@ -37,11 +37,12 @@ class MyODataConfig extends ODataConfiguration {
     ChipsModule,
     ToolbarModule,
   ],
-  providers: [ { provide: ODataConfiguration, useFactory: () => { 
-        const odta = new ODataConfiguration();
-        odta.baseUrl = 'http://dev.avtokompaniya.ru/api/';
-        return odta; }
-    }, ODataServiceFactory ],
+  // providers: [ { provide: ODataConfiguration, useFactory: () => { 
+  //       const odta = new ODataConfiguration();
+  //       odta.baseUrl = 'http://dev.avtokompaniya.ru/api/';
+  //       return odta; }
+  //   }, ODataServiceFactory ],
+  providers: [ ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
