@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import {CheckboxModule, DropdownModule, ToolbarModule} from 'primeng/primeng';
 import {DataTableModule, SharedModule, ListboxModule, OverlayPanelModule, ChipsModule} from 'primeng/primeng';
 import {Order} from '../models/order';
-import { Http, JsonpModule } from '@angular/http';
+import { Http, JsonpModule, RequestOptions, Headers,RequestMethod } from '@angular/http';
+import { Router } from '@angular/router';
 
 declare var XLSX;
 declare var Workbook;
@@ -31,46 +32,66 @@ export class OrdersBoardComponent implements OnInit {
   totalOrders: Number = 10;
   orderStatusesDropBox: any = [];
 
+  // apiPrefix = 'https://cat.avtokompaniya.ru/api';
+  apiPrefix = 'http://dev.avtokompaniya.ru/api';
+  authKey;
+
   constructor(
-    private http: Http
+    private http: Http, private router: Router
   ) {
+  }
+  private authHeader() {
+        // create authorization header with jwt token
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser && currentUser.access_token) {
+            let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.access_token });
+            console.log(headers);
+return new RequestOptions();
+            // return new RequestOptions({ headers: headers , method: RequestMethod.Get});
+        } else {
+          this.router.navigate(['login']);
+        }
   }
 
   ngOnInit() {
     // get totalOrders
-    this.http.get('http://dev.avtokompaniya.ru/api/OrderItems/$count')
+    console.log(this.authHeader());
+
+    this.http.get(`${this.apiPrefix}/OrderItems/$count`)
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
         numberStr => this.totalOrders = +numberStr,
-        error => console.log(`Fetch totalOrders error: ${error.message}`)
+        error => console.log(`Fetch totalOrders error: ${error}`)
       );
 
     // prepare status filter
-    this.http.get('http://dev.avtokompaniya.ru/api/Statuses')
+    this.http.get(`${this.apiPrefix}/Statuses`, this.authHeader())
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
-        statuses => this.orderStatusesDropBox = this.statusesFilter = statuses.value.map(status => {return{label: status.Name, value: status.Id}}),
-        error => console.log(`Fetch statuses error: ${error.message}`)
+        statuses => this.orderStatusesDropBox = this.statusesFilter = statuses.value.map(
+          status => {return{label: status.Name, value: status.Id}; }
+          ),
+        error => console.log(`Fetch statuses error: ${error}`)
       );
 
     // prepare status filter
-    this.http.get('http://dev.avtokompaniya.ru/api/Suppliers')
+    this.http.get(`${this.apiPrefix}/Suppliers`, this.authHeader())
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
         statuses => this.suppliersFilter = statuses.value.map(status => {return{label: status.Name, value: status.Id}}),
-        error => console.log(`Fetch suppliers error: ${error.message}`)
+        error => console.log(`Fetch suppliers error: ${error}`)
       );
 
     // prepare customers filter
-    this.http.get('http://dev.avtokompaniya.ru/api/Customers')
+    this.http.get(`${this.apiPrefix}/Customers`, this.authHeader())
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
         statuses => this.customersFilter = statuses.value.map(status => {return{label: status.Name, value: status.Id}}),
-        error => console.log(`Fetch customers error: ${error.message}`)
+        error => console.log(`Fetch customers error: ${error}`)
       );
   }
 
@@ -137,29 +158,13 @@ export class OrdersBoardComponent implements OnInit {
        filtersStr =  `$filter=${filtersStr}`;
     }
 
-    this.http.get(`http://dev.avtokompaniya.ru/api/OrderItems?${filtersStr}`)
+    this.http.get(`${this.apiPrefix}/OrderItems?${filtersStr}`, this.authHeader())
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
         orderitems => this.orders = orderitems.value,
         error => console.log(`Fetch orderitems error: ${error.message}`)
       );
-
-        // this.odata
-        // .Query()// Creates a query object
-        // // .Top(event.rows)
-        // // .Skip(event.first)
-        // // .Expand("Comment,From")
-        // // .OrderBy("SendDate desc")
-        // .Filter(this.prepareOdataFilterString())
-        // .Exec()                     // Fires the request
-        // .subscribe(                 // Subscribes to Observable<Array<T>>
-        // orders => {
-        //     this.orders = orders;
-        // },
-        // error => {
-        //     console.log('oData load orders error');
-        // });
   }
 
   loadOrdersLazy(event) {
@@ -170,28 +175,14 @@ export class OrdersBoardComponent implements OnInit {
        filtersStr =  `$filter=${filtersStr}`;
     }
     // tslint:disable-next-line:max-line-length
-    this.http.get(`http://dev.avtokompaniya.ru/api/OrderItems?${filtersStr}&$top=${event.rows}&$skip=${event.first}`)
+    // todo auth token
+    this.http.get(`${this.apiPrefix}/OrderItems?${filtersStr}&$top=${event.rows}&$skip=${event.first}`)
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
         orderitems => this.orders = orderitems.value,
         error => console.log(`Fetch orderitems error: ${error.message}`)
       );
-    // this.odata
-    //     .Query()// Creates a query object
-    //     .Top(event.rows)
-    //     .Skip(event.first)
-    //     // .Expand("Comment,From")
-    //     // .OrderBy("SendDate desc")
-    //     .Filter(this.prepareOdataFilterString())
-    //     .Exec()                     // Fires the request
-    //     .subscribe(                 // Subscribes to Observable<Array<T>>
-    //     orders => {
-    //         this.orders = orders;
-    //     },
-    //     error => {
-    //         console.log('oData load orders error');
-    //     });
   }
 
   datenum(v, date1904 = null) {

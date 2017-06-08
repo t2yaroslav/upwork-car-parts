@@ -1,3 +1,4 @@
+import {RouterModule} from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, Injectable } from '@angular/core';
@@ -10,6 +11,8 @@ import { ODataConfiguration, ODataServiceFactory, ODataService } from 'angular2-
 
 import { AppComponent } from './app.component';
 import { OrdersBoardComponent } from './orders-board/orders-board.component';
+import { LoginComponent } from './login/login.component';
+import {ROUTES} from './app.routes';
 
 @Injectable()
 export class MyODataConfig extends ODataConfiguration {
@@ -19,7 +22,8 @@ export class MyODataConfig extends ODataConfiguration {
 @NgModule({
   declarations: [
     AppComponent,
-    OrdersBoardComponent
+    OrdersBoardComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +40,7 @@ export class MyODataConfig extends ODataConfiguration {
     OverlayPanelModule,
     ChipsModule,
     ToolbarModule,
+    RouterModule.forRoot(ROUTES),
   ],
   // providers: [ { provide: ODataConfiguration, useFactory: () => { 
   //       const odta = new ODataConfiguration();

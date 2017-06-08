@@ -1,67 +1,51 @@
 <div class="ui-g">
-   <div class="ui-g-3">
-      <!--Suppliers filter-->
-      <p-toolbar scrolling="true">
-        <!--<h4>Suppliers</h4>-->
-        <label> Suppliers
+  <div class="ui-g-3">
+    <!--Suppliers filter-->
+    <p-toolbar [style]="{'height':'100%'}">
+      <div class="pre-scrollable" style="height:100%;min-height:100%;">
+      <!--<h4>Suppliers</h4>-->
+      <label> Suppliers
           <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple"
-          checkbox="checkbox" filter="filter" (onChange)="onChangeSuppliersFilter()" [style]="{'width':'320px','max-height':'200px'}">
+          checkbox="checkbox" filter="filter" (onChange)="onChangeSuppliersFilter()" [style]="{'width':'100%'}">
           </p-listbox>
         </label>
-        
-        <!--Statuses filter-->
-        <label> Statuses
+
+      <!--Statuses filter-->
+      <label> Statuses
           <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple"
-          checkbox="checkbox" filter="filter" (onChange)="onChangeStatusesFilter()" [style]="{'width':'320px','max-height':'200px'}">
+          checkbox="checkbox" filter="filter" (onChange)="onChangeStatusesFilter()" [style]="{'width':'100%'}">
           </p-listbox>
         </label>
 
-        <!--Customers filter-->
-        <label> Customers
+      <!--Customers filter-->
+      <label> Customers
           <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple"
-          checkbox="checkbox" filter="filter" (onChange)="onChangeCustomersFilter()" [style]="{'width':'320px','max-height':'200px'}">
+          checkbox="checkbox" filter="filter" (onChange)="onChangeCustomersFilter()" [style]="{'width':'100%'}" >
           </p-listbox>
         </label>
-
-      </p-toolbar>
-   </div>
-   <div class="ui-g-9">
-      <p-toolbar>
-         <div class="ui-toolbar-group-left">
-            <button type="text" pButton label="Apply filters" icon="fa-filter" iconPos="left" (click)="onApplyFilters()" style="float: left;"></button>
-         </div>
-         <div class="ui-toolbar-group-right">
-            <div class="ui-helper-clearfix">
-               <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float: right;"></button>
-               <button type="button" pButton data-clipboard-target="#ordersTable" icon="fa-clipboard" iconPos="left" label="Copy2Clipboard"  style="float:right;"></button>
-               <button type="button" pButton icon="fa-file-excel-o" iconPos="left" label="Excell" (click)="onExcellExport()" style="float:right;"></button>
-               <!--<button data-clipboard-target="#ordersTable" label="Copy2Clipboard"></button>-->
-               <!--<button class="btn" [cbContent]="'target string'">Copy to clipboard</button>-->
-            </div>
-         </div>
-      </p-toolbar>
-      <p-dataTable id="ordersTable" [value]="orders" [rows]="20" [paginator]="true"   scrollable="true"  scrollHeight="520px"
-      [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()"
-      dataKey="Id" [editable]="true" #dt exportFilename="orders" 
-      [lazy]="true" [totalRecords]="totalOrders" (onLazyLoad)="loadOrdersLazy($event)" 
-      >
-      <p-column selectionMode="multiple" ></p-column>
-      <!--<p-column field="code" header="code"></p-column>
-         <p-column field="producer" header="producer"></p-column>
-         <p-column field="name" header="name"></p-column>
-         <p-column field="quantity" header="quantity"></p-column>
-         <p-column field="price" header="price" [editable]="true"></p-column>
-         <p-column field="vendor_price" header="vendor price" [editable]="true"></p-column>
-         <p-column field="balance" header="balance"></p-column>
-         <p-column field="delivery_time" header="delivery time"></p-column>
-         <p-column field="status" header="status" [editable]="true" [style]="{'overflow':'visible'}">
-         <ng-template let-col let-order="rowData" pTemplate="editor">
-            <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatuses" [autoWidth]="false" [style]="{'width':'100%'}" required="true" (onChange)="onStatusChange(order)">
-            </p-dropdown>
-         </ng-template>
-         </p-column>
-         <p-column field="oreder_id" header="oreder id"></p-column>
-         <p-column field="order_date" header="order date"></p-column>-->
+        </div>
+    </p-toolbar>
+  </div>
+  <div class="ui-g-9">
+    <p-toolbar>
+      <div class="ui-toolbar-group-left">
+        <button type="text" pButton label="Apply filters" icon="fa-filter" iconPos="left" (click)="onApplyFilters()" style="float: left;"></button>
+      </div>
+      <div class="ui-toolbar-group-right">
+        <div class="ui-helper-clearfix">
+          <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float: right;"></button>
+          <button type="button" pButton data-clipboard-target="#ordersTable" icon="fa-clipboard" iconPos="left" label="Copy2Clipboard"
+            style="float:right;"></button>
+          <button type="button" pButton icon="fa-file-excel-o" iconPos="left" label="Excell" (click)="onExcellExport()" style="float:right;"></button>
+          <!--<button data-clipboard-target="#ordersTable" label="Copy2Clipboard"></button>-->
+          <!--<button class="btn" [cbContent]="'target string'">Copy to clipboard</button>-->
+        </div>
+      </div>
+    </p-toolbar>
+    <p-dataTable id="ordersTable" [value]="orders" [rows]="20" [paginator]="true" scrollable="true" scrollHeight="550px" [(selection)]="selectedOrders"
+      (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders"
+      [lazy]="true" [totalRecords]="totalOrders" (onLazyLoad)="loadOrdersLazy($event)">
+      <p-column selectionMode="multiple"></p-column>
       <p-column field="Id" header="Id"></p-column>
       <p-column field="Code" header="Код"></p-column>
       <p-column field="Brand" header="Бренд"></p-column>
@@ -72,16 +56,17 @@
       <p-column field="CountVendor" header="Количество у поставщика"></p-column>
       <p-column field="DeliveryTime" header="Время доставки"></p-column>
       <p-column field="Status" header="Статус" [editable]="true" [style]="{'overflow':'visible'}">
-      <ng-template let-col let-order="rowData" pTemplate="editor">
-         <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatusesDropBox" [autoWidth]="false" [style]="{'width':'100%'}" required="true" (onChange)="onStatusChange(order)">
-         </p-dropdown>
-      </ng-template>
+        <ng-template let-col let-order="rowData" pTemplate="editor">
+          <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatusesDropBox" [autoWidth]="false" [style]="{'width':'100%'}"
+            required="true" (onChange)="onStatusChange(order)">
+          </p-dropdown>
+        </ng-template>
       </p-column>
       <p-column field="OrderId" header="Id заказа"></p-column>
       <p-column field="OrderDate" header="Дата заказа"></p-column>
       <p-column field="Comment" header="Комментарий"></p-column>
       <p-column field="CustomerId" header="Id клиента"></p-column>
       <p-column field="SuppliersId" header="Id поставщика"></p-column>
-      </p-dataTable>
-   </div>
+    </p-dataTable>
+  </div>
 </div>
