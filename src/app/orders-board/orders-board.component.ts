@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import {CheckboxModule, DropdownModule, ToolbarModule} from 'primeng/primeng';
-import {DataTableModule, SharedModule, ListboxModule, OverlayPanelModule, ChipsModule} from 'primeng/primeng';
+import {CheckboxModule, DropdownModule, ToolbarModule, PaginatorModule} from 'primeng/primeng';
+import {DataTableModule, DataTable, SharedModule, ListboxModule, OverlayPanelModule, ChipsModule} from 'primeng/primeng';
 import {Order} from '../models/order';
-import { Http, JsonpModule, RequestOptions, Headers,RequestMethod } from '@angular/http';
+import { Http, JsonpModule, RequestOptions, Headers, RequestMethod } from '@angular/http';
 import { Router } from '@angular/router';
+import {Clipboard} from 'ts-clipboard';
 
 declare var XLSX;
 declare var Workbook;
@@ -36,17 +37,30 @@ export class OrdersBoardComponent implements OnInit {
   apiPrefix = 'http://dev.avtokompaniya.ru/api';
   authKey;
 
+  @ViewChild(DataTable)
+  private dataTable: DataTable;
+
+  isResponsive(): Boolean {
+    const screanWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    // console.log(screanWidth);
+    if (screanWidth <= 768) {
+      return true;
+    }
+    return false;
+  }
+
   constructor(
     private http: Http, private router: Router
   ) {
   }
+
   private authHeader() {
         // create authorization header with jwt token
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && currentUser.access_token) {
             let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.access_token });
             console.log(headers);
-return new RequestOptions();
+            return new RequestOptions();
             // return new RequestOptions({ headers: headers , method: RequestMethod.Get});
         } else {
           this.router.navigate(['login']);
@@ -54,6 +68,7 @@ return new RequestOptions();
   }
 
   ngOnInit() {
+
     // get totalOrders
     console.log(this.authHeader());
 
@@ -115,6 +130,7 @@ return new RequestOptions();
   onStatusChange(order) {
     if (this.selectedOrders.includes(order)) {
       this.selectedOrders.forEach(element => element.Status = order.Status);
+      // to do send changes to server;
     }
   }
 
@@ -255,4 +271,39 @@ return new RequestOptions();
     }
     saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'test.xlsx');
   }
+
+  onCopyToClipboard() {
+    Clipboard.copy(this.tableToCSV());
+  }
+
+  public tableToCSV() {
+        let data = this.dataTable.filteredValue || this.dataTable.value;
+        // let csv = '\ufeff';
+        let csv = '';
+        // headers
+        for(let i = 0; i < this.dataTable.columns.length; i++) {
+            if(this.dataTable.columns[i].field) {
+                csv += '"' + (this.dataTable.columns[i].header || this.dataTable.columns[i].field) + '"';
+
+                if(i < (this.dataTable.columns.length - 1)) {
+                    csv += this.dataTable.csvSeparator;
+                }
+            }
+        }
+
+        // body
+        data.forEach((record, i) => {
+            csv += '\n';
+            for(let i = 0; i < this.dataTable.columns.length; i++) {
+                if(this.dataTable.columns[i].field) {
+                    csv += '"' + this.dataTable.resolveFieldData(record, this.dataTable.columns[i].field) + '"';
+
+                    if(i < (this.dataTable.columns.length - 1)) {
+                        csv += this.dataTable.csvSeparator;
+                    }
+                }
+            }
+        });
+        return csv;
+    }
 }

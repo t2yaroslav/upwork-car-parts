@@ -1,50 +1,66 @@
 <div class="ui-g">
-  <div class="ui-g-3">
+  <div class="ui-g-3" [hidden]="isResponsive() && !checked">
+    <!--<div class="ontop container">
+      <div class="row">
+
+      </div>
+    </div>-->
+    <!--<p-paginator rows="10" totalRecords="totalOrders"  alwaysShow [rowsPerPageOptions]="[10,20,30]"></p-paginator>-->
     <!--Suppliers filter-->
-    <p-toolbar [style]="{'height':'100%'}">
-      <div class="pre-scrollable" style="height:100%;min-height:100%;">
-      <!--<h4>Suppliers</h4>-->
-      <label> Suppliers
-          <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple"
-          checkbox="checkbox" filter="filter" (onChange)="onChangeSuppliersFilter()" [style]="{'width':'100%'}">
+    <div >
+      <p-toolbar [style]="{'height':'100%'}">
+        <!--<div class="pre-scrollable" style="height:100%;min-height:100%;">-->
+          <label> Suppliers </label>
+          <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
+            (onChange)="onChangeSuppliersFilter()" [style]="{'width':'100%'}">
           </p-listbox>
-        </label>
 
-      <!--Statuses filter-->
-      <label> Statuses
-          <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple"
-          checkbox="checkbox" filter="filter" (onChange)="onChangeStatusesFilter()" [style]="{'width':'100%'}">
-          </p-listbox>
-        </label>
 
-      <!--Customers filter-->
-      <label> Customers
-          <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple"
-          checkbox="checkbox" filter="filter" (onChange)="onChangeCustomersFilter()" [style]="{'width':'100%'}" >
+          <!--Statuses filter-->
+          <label> Statuses </label>
+          <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
+            (onChange)="onChangeStatusesFilter()" [style]="{'width':'100%'}">
           </p-listbox>
-        </label>
-        </div>
-    </p-toolbar>
+
+
+          <!--Customers filter-->
+          <label> Customers</label>
+          <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
+            (onChange)="onChangeCustomersFilter()" [style]="{'width':'100%'}">
+          </p-listbox>
+
+        <!--</div>-->
+      </p-toolbar>
+    </div>
   </div>
-  <div class="ui-g-9">
+
+  <div [ngClass]="{'ui-g-9': (!isResponsive() || checked)}">
     <p-toolbar>
       <div class="ui-toolbar-group-left">
-        <button type="text" pButton label="Apply filters" icon="fa-filter" iconPos="left" (click)="onApplyFilters()" style="float: left;"></button>
+        <span [hidden]="!(isResponsive())">
+          <p-toggleButton [(ngModel)]="checked" (onChange)="onApplyFilters($event)" onLabel="&nbsp;" offLabel="&nbsp;" onIcon="fa-bars"  offIcon="fa-bars" [style]="{'float':'left'}"></p-toggleButton>
+          <!--<button  type="text" pButton  iconPos="left" (click)="onApplyFilters()" ></button>-->
+        </span>
+        <span [hidden]="isResponsive()">
+          <button  type="text" pButton label="Apply filters" icon="fa-filter" iconPos="left" (click)="onApplyFilters()" style="float: left;"></button>
+        </span>
       </div>
       <div class="ui-toolbar-group-right">
         <div class="ui-helper-clearfix">
           <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float: right;"></button>
-          <button type="button" pButton data-clipboard-target="#ordersTable" icon="fa-clipboard" iconPos="left" label="Copy2Clipboard"
-            style="float:right;"></button>
+          <button type="button" pButton data-clipboard-target="#ordersTable" icon="fa-clipboard" iconPos="left" label="Clipboard" style="float:right;"
+            (click)="onCopyToClipboard()"></button>
           <button type="button" pButton icon="fa-file-excel-o" iconPos="left" label="Excell" (click)="onExcellExport()" style="float:right;"></button>
           <!--<button data-clipboard-target="#ordersTable" label="Copy2Clipboard"></button>-->
           <!--<button class="btn" [cbContent]="'target string'">Copy to clipboard</button>-->
         </div>
       </div>
     </p-toolbar>
-    <p-dataTable id="ordersTable" [value]="orders" [rows]="20" [paginator]="true" scrollable="true" scrollHeight="550px" [(selection)]="selectedOrders"
-      (onRowSelect)="onSelectionChange()" (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders"
-      [lazy]="true" [totalRecords]="totalOrders" (onLazyLoad)="loadOrdersLazy($event)">
+    <!--scrollable="true" scrollHeight="550px"-->
+    <p-dataTable id="ordersTable" [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()"
+      (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders" [lazy]="true" [totalRecords]="totalOrders"
+      (onLazyLoad)="loadOrdersLazy($event)" [responsive]="true" [stacked]="isResponsive()" [style]="{'width':'100%'}">
+
       <p-column selectionMode="multiple"></p-column>
       <p-column field="Id" header="Id"></p-column>
       <p-column field="Code" header="Код"></p-column>
@@ -67,6 +83,7 @@
       <p-column field="Comment" header="Комментарий"></p-column>
       <p-column field="CustomerId" header="Id клиента"></p-column>
       <p-column field="SuppliersId" header="Id поставщика"></p-column>
+
     </p-dataTable>
   </div>
 </div>
