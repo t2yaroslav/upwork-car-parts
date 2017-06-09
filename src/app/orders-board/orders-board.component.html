@@ -38,7 +38,8 @@
     <p-toolbar>
       <div class="ui-toolbar-group-left">
         <span [hidden]="!(isResponsive())">
-          <p-toggleButton [(ngModel)]="checked" (onChange)="onApplyFilters($event)" onLabel="&nbsp;" offLabel="&nbsp;" onIcon="fa-bars"  offIcon="fa-bars" [style]="{'float':'left'}"></p-toggleButton>
+          <p-toggleButton [(ngModel)]="checked" (onChange)="onApplyFilters($event)" 
+          onLabel="&nbsp;" offLabel="&nbsp;" onIcon="fa-bars"  offIcon="fa-bars" [style]="{'float':'left'}"></p-toggleButton>
           <!--<button  type="text" pButton  iconPos="left" (click)="onApplyFilters()" ></button>-->
         </span>
         <span [hidden]="isResponsive()">
@@ -67,8 +68,8 @@
       <p-column field="Brand" header="Бренд"></p-column>
       <p-column field="Name" header="Название"></p-column>
       <p-column field="Count" header="Кол-во"></p-column>
-      <p-column field="Price" header="Цена" [editable]="true"></p-column>
-      <p-column field="PriceVendor" header="Цена поставщика" [editable]="true"></p-column>
+      <p-column field="Price" header="Цена" [editable]="true" (onEditComplete)="onPriceChange(order)"></p-column>
+      <p-column field="PriceVendor" header="Цена поставщика" [editable]="true" (onEditComplete)="onPriceVendorChange(order)"></p-column>
       <p-column field="CountVendor" header="Количество у поставщика"></p-column>
       <p-column field="DeliveryTime" header="Время доставки"></p-column>
       <p-column field="Status" header="Статус" [editable]="true" [style]="{'overflow':'visible'}">

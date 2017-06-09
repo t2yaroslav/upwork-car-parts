@@ -128,10 +128,48 @@ export class OrdersBoardComponent implements OnInit {
   }
 
   onStatusChange(order) {
+    console.log('onStatusChange');
+    this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {Status: order.Status}, this.authHeader())
+            .map(res => res.json())
+            .subscribe(
+              resp => console.log(`update seccess : ${resp}`),
+              error => console.log(`update error: ${error}`)
+            );
     if (this.selectedOrders.includes(order)) {
-      this.selectedOrders.forEach(element => element.Status = order.Status);
-      // to do send changes to server;
+      this.selectedOrders.forEach(
+        element => {
+          element.Status = order.Status;
+          // send changes to server;
+          this.http.patch(`${this.apiPrefix}/OrderItems/${element.Id}`, {Status: element.Status}, this.authHeader())
+            .map(res => res.json())
+            .subscribe(
+              resp => console.log(`update seccess : ${resp}`),
+              error => console.log(`update error: ${error}`)
+            );
+        });
     }
+  }
+
+  onPriceChange(order) {
+    console.log('onPriceChange');
+    console.log(JSON.stringify(order));
+    this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {Price: order.Price}, this.authHeader())
+    .map(res => res.json())
+    .subscribe(
+      resp => console.log(`update seccess : ${resp}`),
+      error => console.log(`update error: ${error}`)
+    );
+  }
+
+  onPriceVendorChange(order) {
+    console.log('onPriceVendorChange');
+    console.log(JSON.stringify(order));
+    this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {PriceVendor: order.PriceVendor}, this.authHeader())
+    .map(res => res.json())
+    .subscribe(
+      resp => console.log(`update seccess : ${resp}`),
+      error => console.log(`update error: ${error}`)
+    );
   }
 
   prepareOdataFilterString(): string {
@@ -190,9 +228,8 @@ export class OrdersBoardComponent implements OnInit {
     if (filtersStr !== '') {
        filtersStr =  `$filter=${filtersStr}`;
     }
-    // tslint:disable-next-line:max-line-length
     // todo auth token
-    this.http.get(`${this.apiPrefix}/OrderItems?${filtersStr}&$top=${event.rows}&$skip=${event.first}`)
+    this.http.get(`${this.apiPrefix}/OrderItems?${filtersStr}&$top=${event.rows}&$skip=${event.first}`, this.authHeader())
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
