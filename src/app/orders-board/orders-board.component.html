@@ -1,5 +1,5 @@
 <div class="ui-g">
-  <div class="ui-g-3" [hidden]="isResponsive() && !checked">
+  <div class="ui-g-3" [hidden]="isResponsiveFlag && !checked">
     <!--<div class="ontop container">
       <div class="row">
 
@@ -34,15 +34,15 @@
     </div>
   </div>
 
-  <div [ngClass]="{'ui-g-9': (!isResponsive() || checked)}">
+  <div [ngClass]="{'ui-g-9': (!isResponsiveFlag || checked)}">
     <p-toolbar>
       <div class="ui-toolbar-group-left">
-        <span [hidden]="!(isResponsive())">
+        <span [hidden]="!(isResponsiveFlag)">
           <p-toggleButton [(ngModel)]="checked" (onChange)="onApplyFilters($event)" 
           onLabel="&nbsp;" offLabel="&nbsp;" onIcon="fa-bars"  offIcon="fa-bars" [style]="{'float':'left'}"></p-toggleButton>
           <!--<button  type="text" pButton  iconPos="left" (click)="onApplyFilters()" ></button>-->
         </span>
-        <span [hidden]="isResponsive()">
+        <span [hidden]="isResponsiveFlag">
           <button  type="text" pButton label="Apply filters" icon="fa-filter" iconPos="left" (click)="onApplyFilters()" style="float: left;"></button>
         </span>
       </div>
@@ -60,7 +60,7 @@
     <!--scrollable="true" scrollHeight="550px"-->
     <p-dataTable id="ordersTable" [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()"
       (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders" [lazy]="true" [totalRecords]="totalOrders"
-      (onLazyLoad)="loadOrdersLazy($event)" [responsive]="true" [stacked]="isResponsive()" [style]="{'width':'100%'}">
+      (onLazyLoad)="loadOrdersLazy($event)" [responsive]="true" [stacked]="isResponsiveFlag" [style]="{'width':'100%'}">
 
       <p-column selectionMode="multiple"></p-column>
       <p-column field="Id" header="Id"></p-column>

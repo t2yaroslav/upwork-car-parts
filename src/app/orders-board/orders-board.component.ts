@@ -36,16 +36,20 @@ export class OrdersBoardComponent implements OnInit {
   // apiPrefix = 'https://cat.avtokompaniya.ru/api';
   apiPrefix = 'http://dev.avtokompaniya.ru/api';
   authKey;
+  isResponsiveFlag = false;
 
   @ViewChild(DataTable)
   private dataTable: DataTable;
+
 
   isResponsive(): Boolean {
     const screanWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     // console.log(screanWidth);
     if (screanWidth <= 768) {
+      this.isResponsiveFlag = true;
       return true;
     }
+    this.isResponsiveFlag = false;
     return false;
   }
 
@@ -68,7 +72,10 @@ export class OrdersBoardComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    const self = this;
+    window.onresize = function(event) {
+      self.isResponsive();
+    };
     // get totalOrders
     console.log(this.authHeader());
 
