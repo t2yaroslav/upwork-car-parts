@@ -5,7 +5,7 @@ import { NgModule, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 // import { ClipboardModule } from 'angular2-clipboard';
-import {DataTableModule, SharedModule, DropdownModule, ListboxModule, ToggleButtonModule,
+import {DataTableModule, SharedModule, DropdownModule, ListboxModule, ToggleButtonModule, 
 OverlayPanelModule, ChipsModule, InputTextModule, ButtonModule, CheckboxModule, ToolbarModule} from 'primeng/primeng';
 import { ODataConfiguration, ODataServiceFactory, ODataService } from 'angular2-odata';
 

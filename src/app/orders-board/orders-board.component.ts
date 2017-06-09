@@ -161,7 +161,9 @@ export class OrdersBoardComponent implements OnInit {
     );
   }
 
-  onPriceVendorChange(order) {
+  onPriceVendorChange(order,price) {
+    console.log(price);
+    
     console.log('onPriceVendorChange');
     console.log(JSON.stringify(order));
     this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {PriceVendor: order.PriceVendor}, this.authHeader())
