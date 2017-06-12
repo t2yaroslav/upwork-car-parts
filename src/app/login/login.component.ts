@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
         authInfo => {
           this.authInfo = authInfo;
           console.log(authInfo);
+          authInfo.dashboardUsername = this.username;
           localStorage.setItem('currentUser', JSON.stringify(authInfo));
           this.router.navigate(['orders']);
         },

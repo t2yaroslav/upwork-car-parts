@@ -37,6 +37,8 @@ export class OrdersBoardComponent implements OnInit {
   apiPrefix = 'http://dev.avtokompaniya.ru/api';
   authKey;
   isResponsiveFlag = false;
+  userName;
+  access_token;
 
   @ViewChild(DataTable)
   private dataTable: DataTable;
@@ -59,19 +61,35 @@ export class OrdersBoardComponent implements OnInit {
   }
 
   private authHeader() {
-        // create authorization header with jwt token
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.access_token) {
-            let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.access_token });
-            console.log(headers);
-            return new RequestOptions();
-            // return new RequestOptions({ headers: headers , method: RequestMethod.Get});
-        } else {
+      // create authorization header with jwt token
+      let headers = new Headers({ 'Authorization': 'Bearer ' + this.access_token });
+      console.log(headers);
+      return new RequestOptions();
+      // return new RequestOptions({ headers: headers});
+  }
+
+  private getAuthInfo() {
+    const cu = localStorage.getItem('currentUser');
+    if (cu) {
+      try {
+        const currentUser = JSON.parse(cu);
+        this.userName = currentUser.dashboardUsername;
+        this.access_token = currentUser.access_token;
+        if (!this.access_token) {
           this.router.navigate(['login']);
         }
+      } catch (e) {
+        console.log('Auth info. JSON parse error: ' + e);
+        this.router.navigate(['login']);
+      }
+    }else {
+      console.log('User not loggin on');
+      this.router.navigate(['login']);
+    }
   }
 
   ngOnInit() {
+    this.getAuthInfo();
     const self = this;
     window.onresize = function(event) {
       self.isResponsive();
@@ -79,7 +97,7 @@ export class OrdersBoardComponent implements OnInit {
     // get totalOrders
     console.log(this.authHeader());
 
-    this.http.get(`${this.apiPrefix}/OrderItems/$count`)
+    this.http.get(`${this.apiPrefix}/OrderItems/$count`, this.authHeader())
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
@@ -115,19 +133,25 @@ export class OrdersBoardComponent implements OnInit {
         statuses => this.customersFilter = statuses.value.map(status => {return{label: status.Name, value: status.Id}}),
         error => console.log(`Fetch customers error: ${error}`)
       );
+
+      this.retriveFiltersFromLocalStore();
+      setInterval(() => this.onApplyFilters(), 1000 * 60);
   }
 
   onChangeSuppliersFilter(checked) {
     console.log(JSON.stringify(this.suppliersFilterSelected));
+    this.onApplyFilters();
   }
 
   onChangeStatusesFilter() {
     console.log(JSON.stringify(this.statusesFilterSelected));
+    this.onApplyFilters();
   }
 
   onChangeCustomersFilter() {
     console.log(JSON.stringify(this.customersFilterSelected));
     console.log(this.prepareOdataFilterString());
+    this.onApplyFilters();
   }
 
   onSelectionChange() {
@@ -170,7 +194,7 @@ export class OrdersBoardComponent implements OnInit {
 
   onPriceVendorChange(order,price) {
     console.log(price);
-    
+
     console.log('onPriceVendorChange');
     console.log(JSON.stringify(order));
     this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {PriceVendor: order.PriceVendor}, this.authHeader())
@@ -214,7 +238,28 @@ export class OrdersBoardComponent implements OnInit {
     return result;
   }
 
+  saveFiltersToLocalStore() {
+    const temp = {
+      suppliersFS: this.suppliersFilterSelected,
+      statusesFS: this.statusesFilterSelected,
+      customers: this.customersFilterSelected
+    };
+    localStorage.setItem('savedFilters', JSON.stringify(temp));
+  }
+
+  retriveFiltersFromLocalStore() {
+    const sf = localStorage.getItem('savedFilters');
+    if (sf) {
+      const temp = JSON.parse(sf);
+      this.suppliersFilterSelected = temp.suppliersFS;
+      this.statusesFilterSelected = temp.statusesFS;
+      this.customersFilterSelected = temp.customers;
+    }
+  }
+
+
   onApplyFilters() {
+    this.saveFiltersToLocalStore()
     console.log('onApplyFilters');
     let filtersStr = this.prepareOdataFilterString();
     if (filtersStr !== '') {
