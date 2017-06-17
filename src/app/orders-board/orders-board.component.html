@@ -62,7 +62,8 @@
       </div>
     </p-toolbar>
     <!--scrollable="true" scrollHeight="550px"-->
-    <p-dataTable id="ordersTable" [value]="orders" [rows]="10" [paginator]="true" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()"
+    <!--[rows]="10"-->
+    <p-dataTable id="ordersTable" [value]="orders"  [paginator]="true" [rowsPerPageOptions]="rowsPerPageOptions" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()"
       (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders" [lazy]="true" [totalRecords]="totalOrders"
       (onLazyLoad)="loadOrdersLazy($event)" [responsive]="true" [stacked]="isResponsiveFlag" [style]="{'width':'100%'}">
 

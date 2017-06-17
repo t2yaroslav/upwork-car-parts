@@ -19,6 +19,9 @@ declare var saveAs;
 })
 
 export class OrdersBoardComponent implements OnInit {
+  rowsPerPageOptions = [10, 20, 30, 40, 50];
+  retrivedRows;
+  retrivedSortField;
 
   suppliersFilter: any[] = [];
   suppliersFilterSelected: any[] = [];
@@ -91,6 +94,28 @@ export class OrdersBoardComponent implements OnInit {
     }
   }
 
+  retriveRowsFromLocStor() {
+    const rows = localStorage.getItem('rows');
+    if (rows && rows != null) {
+      this.dataTable.rows = +rows;
+      this.retrivedRows = +rows;
+    } else {
+      localStorage.setItem('rows', '10');
+      this.dataTable.rows = 10;
+      this.retrivedRows = 10;
+    }
+  }
+
+  retriveSortFieldFromLocStor() {
+    const field = localStorage.getItem('sortField');
+    if (field && field != null) {
+      this.dataTable.sortField = field;
+      this.retrivedSortField = field;
+    } else {
+      this.retrivedSortField = undefined;
+    }
+  }
+
   ngOnInit() {
     this.getAuthInfo();
     const self = this;
@@ -138,7 +163,13 @@ export class OrdersBoardComponent implements OnInit {
       );
 
       this.retriveFiltersFromLocalStore();
+      this.retriveRowsFromLocStor();
+      this.retriveSortFieldFromLocStor();
+
       setInterval(() => this.onApplyFilters(), 1000 * 60);
+      this.dataTable.onSort.subscribe(
+        n => {console.log('sort');}
+      )
   }
 
   onChangeSuppliersFilter(checked) {
@@ -301,14 +332,32 @@ export class OrdersBoardComponent implements OnInit {
   }
 
   loadOrdersLazy(event) {
-    console.log('load orders lazy');
-    console.log('onApplyFilters');
+    if (this.retrivedRows != this.dataTable.rows) {
+      localStorage.setItem('rows', this.dataTable.rows.toString());
+    }
+
+    if (this.retrivedSortField != event.sortField) {
+      localStorage.setItem('sortField', event.sortField);
+    }
+
+    console.log(this.dataTable.rows);
+    // console.log(this.dataTable.roes);
+
     let filtersStr = this.prepareOdataFilterString();
     if (filtersStr !== '') {
        filtersStr =  `$filter=${filtersStr}`;
     }
-    // todo auth token
-    this.http.get(`${this.apiPrefix}/OrderItems?${filtersStr}&$top=${event.rows}&$skip=${event.first}`, this.authHeader())
+
+    let orderString = '';
+    if (event.sortField) {
+      orderString = `$orderby=${event.sortField} ${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+    }
+
+this.http.get(`${this.apiPrefix}/OrderItems?
+${filtersStr}&
+$top=${event.rows}&
+$skip=${event.first}&
+${orderString}`, this.authHeader())
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
