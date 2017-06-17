@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit {
   loginError = false;
   errorMessage = '';
 
+  tokenUrl = 'https://cat.avtokompaniya.ru/api/Token';
+  // tokenUrl = 'http://dev.avtokompaniya.ru/api/Token';
   constructor(private http: Http, private router: Router) { }
 
   ngOnInit() {
@@ -23,7 +25,7 @@ export class LoginComponent implements OnInit {
     const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const options = new RequestOptions( {headers: headers });
     const body = `grant_type=password&username=${this.username}&password=${this.password}`;
-      this.http.post('http://dev.avtokompaniya.ru/api/Token', body, options)
+      this.http.post(this.tokenUrl, body, options)
       .map(res => res.json())
       .subscribe(
         authInfo => {

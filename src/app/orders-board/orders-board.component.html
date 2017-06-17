@@ -11,22 +11,22 @@
       <p-toolbar [style]="{'height':'100%'}">
         <!--<div class="pre-scrollable" style="height:100%;min-height:100%;">-->
           <label> Suppliers </label>
-          <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
-            (onChange)="onChangeSuppliersFilter()" [style]="{'width':'100%'}">
+          <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple" filter="filter"
+            (onChange)="onChangeSuppliersFilter($event)" [style]="{'width':'100%'}">
           </p-listbox>
 
 
           <!--Statuses filter-->
           <label> Statuses </label>
-          <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
-            (onChange)="onChangeStatusesFilter()" [style]="{'width':'100%'}">
+          <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple" filter="filter"
+            (onChange)="onChangeStatusesFilter($event)" [style]="{'width':'100%'}">
           </p-listbox>
 
 
           <!--Customers filter-->
           <label> Customers</label>
-          <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
-            (onChange)="onChangeCustomersFilter()" [style]="{'width':'100%'}">
+          <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple" filter="filter"
+            (onChange)="onChangeCustomersFilter($event)" [style]="{'width':'100%'}">
           </p-listbox>
 
         <!--</div>-->
@@ -47,13 +47,17 @@
       </div>
       <div class="ui-toolbar-group-right">
         <div class="ui-helper-clearfix">
-          <p>{{userName}}</p>
+
           <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float: right;"></button>
           <button type="button" pButton data-clipboard-target="#ordersTable" icon="fa-clipboard" iconPos="left" label="Clipboard" style="float:right;"
             (click)="onCopyToClipboard()"></button>
           <button type="button" pButton icon="fa-file-excel-o" iconPos="left" label="Excell" (click)="onExcellExport()" style="float:right;"></button>
           <!--<button data-clipboard-target="#ordersTable" label="Copy2Clipboard"></button>-->
           <!--<button class="btn" [cbContent]="'target string'">Copy to clipboard</button>-->
+
+          <!--<div  class="col-sm-4">-->
+            <h4 style="float:right;">Current user:&nbsp;{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+          <!--</div>-->
         </div>
       </div>
     </p-toolbar>
@@ -62,36 +66,36 @@
       (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders" [lazy]="true" [totalRecords]="totalOrders"
       (onLazyLoad)="loadOrdersLazy($event)" [responsive]="true" [stacked]="isResponsiveFlag" [style]="{'width':'100%'}">
 
-      <p-column selectionMode="multiple"></p-column>
-      <p-column field="Id" header="Id"></p-column>
-      <p-column field="Code" header="Код"></p-column>
-      <p-column field="Brand" header="Бренд"></p-column>
-      <p-column field="Name" header="Название"></p-column>
-      <p-column field="Count" header="Кол-во"></p-column>
-      <p-column field="Price" header="Цена" [editable]="true">
+      <p-column [style]="{'width':'3%'}" selectionMode="multiple"></p-column>
+      <p-column [sortable]="true" field="Id" header="Id"></p-column>
+      <p-column [sortable]="true" field="Code" header="Код"></p-column>
+      <p-column [sortable]="true" field="Brand" header="Бренд"></p-column>
+      <p-column [sortable]="true" [styleClass]="nowrap" [style]="{'width':'20%'}" field="Name" header="Название"></p-column>
+      <p-column [sortable]="true" field="Count" [style]="{'width':'3%'}" header="Кол-во"></p-column>
+      <p-column [sortable]="true" field="Price" header="Цена" [editable]="true">
         <ng-template let-col let-order="rowData" pTemplate="editor">
           <input type="text" pInputText (keyup.enter)="onPriceChange(order)" [(ngModel)]="order[col.field]"/>
         </ng-template>
       </p-column>
-      <p-column field="PriceVendor" header="Цена поставщика" [editable]="true" >
+      <p-column [sortable]="true" field="PriceVendor" header="Цена поставщика" [editable]="true" >
         <ng-template let-col let-order="rowData" pTemplate="editor">
           <input type="text" pInputText (keyup.enter)="onPriceVendorChange(order)" [(ngModel)]="order[col.field]"/>
         </ng-template>
       </p-column>
-      <p-column field="CountVendor" header="Количество у поставщика"></p-column>
-      <p-column field="DeliveryTime" header="Время доставки"></p-column>
-      <p-column field="Status" header="Статус" [editable]="true" [style]="{'overflow':'visible'}">
+      <p-column [sortable]="true" field="CountVendor" [style]="{'width':'4%'}"  header="Количество у поставщика"></p-column>
+      <p-column [sortable]="true" field="DeliveryTime" header="Время доставки"></p-column>
+      <p-column [sortable]="true" field="Status" header="Статус" [editable]="true" [style]="{'overflow':'visible'}">
         <ng-template let-col let-order="rowData" pTemplate="editor">
           <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatusesDropBox" [autoWidth]="false" [style]="{'width':'100%'}"
             required="true" (onChange)="onStatusChange(order)">
           </p-dropdown>
         </ng-template>
       </p-column>
-      <p-column field="OrderId" header="Id заказа"></p-column>
-      <p-column field="OrderDate" header="Дата заказа"></p-column>
-      <p-column field="Comment" header="Комментарий"></p-column>
-      <p-column field="CustomerId" header="Id клиента"></p-column>
-      <p-column field="SuppliersId" header="Id поставщика"></p-column>
+      <p-column [sortable]="true" field="OrderId" header="Id заказа"></p-column>
+      <p-column [sortable]="true" field="OrderDate" header="Дата заказа"></p-column>
+      <p-column [sortable]="true" field="Comment" header="Комментарий"></p-column>
+      <p-column [sortable]="true" field="Customer" header="Имя клиента"></p-column>
+      <p-column [sortable]="true" field="Suppliers" header="Имя поставщика"></p-column>
 
     </p-dataTable>
   </div>

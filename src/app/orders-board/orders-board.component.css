@@ -1,0 +1,5 @@
+.nowrap{
+    white-space:nowrap;
+}
+
+.ui-listbox .ui-listbox-item>span {white-space:nowrap;}

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , ChangeDetectorRef,ViewEncapsulation} from '@angular/core';
 
 import {CheckboxModule, DropdownModule, ToolbarModule, PaginatorModule} from 'primeng/primeng';
 import {DataTableModule, DataTable, SharedModule, ListboxModule, OverlayPanelModule, ChipsModule} from 'primeng/primeng';
@@ -14,7 +14,8 @@ declare var saveAs;
 @Component({
   selector: 'app-orders-board',
   templateUrl: './orders-board.component.html',
-  styleUrls: ['./orders-board.component.css']
+  styleUrls: ['./orders-board.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class OrdersBoardComponent implements OnInit {
@@ -33,8 +34,8 @@ export class OrdersBoardComponent implements OnInit {
   totalOrders: Number = 10;
   orderStatusesDropBox: any = [];
 
-  // apiPrefix = 'https://cat.avtokompaniya.ru/api';
-  apiPrefix = 'http://dev.avtokompaniya.ru/api';
+  apiPrefix = 'https://cat.avtokompaniya.ru/api';
+  // apiPrefix = 'http://dev.avtokompaniya.ru/api';
   authKey;
   isResponsiveFlag = false;
   userName;
@@ -56,7 +57,9 @@ export class OrdersBoardComponent implements OnInit {
   }
 
   constructor(
-    private http: Http, private router: Router
+    private http: Http,
+    private router: Router,
+    private ref: ChangeDetectorRef
   ) {
   }
 
@@ -64,8 +67,8 @@ export class OrdersBoardComponent implements OnInit {
       // create authorization header with jwt token
       let headers = new Headers({ 'Authorization': 'Bearer ' + this.access_token });
       console.log(headers);
-      return new RequestOptions();
-      // return new RequestOptions({ headers: headers});
+      // return new RequestOptions();
+      return new RequestOptions({ headers: headers});
   }
 
   private getAuthInfo() {
@@ -148,8 +151,7 @@ export class OrdersBoardComponent implements OnInit {
     this.onApplyFilters();
   }
 
-  onChangeCustomersFilter() {
-    console.log(JSON.stringify(this.customersFilterSelected));
+  onChangeCustomersFilter(event) {
     console.log(this.prepareOdataFilterString());
     this.onApplyFilters();
   }
@@ -215,7 +217,7 @@ export class OrdersBoardComponent implements OnInit {
     }
 
     if (this.statusesFilterSelected.length > 0) {
-      let statusFilter = this.statusesFilterSelected.reduce((prevVal, currItem) => `${prevVal} Status eq ${currItem} or` , '(');
+      let statusFilter = this.statusesFilterSelected.reduce((prevVal, currItem) => `${prevVal} StatusId eq ${currItem} or` , '(');
       statusFilter = `${statusFilter.slice(0, -2)} )`;
       filters.push(statusFilter);
     }
@@ -257,6 +259,29 @@ export class OrdersBoardComponent implements OnInit {
     }
   }
 
+  //12.06.2007
+  dateFormat(dateString) {
+    try {
+      const date = new Date(Date.parse(dateString));
+
+      let dateStr = date.getDate().toString();
+      if (dateStr.length < 2) {
+        dateStr = '0' + dateStr;
+      }
+
+      let monthStr = (date.getMonth() + 1).toString();
+      if (monthStr.length < 2) {
+        monthStr = '0' + monthStr;
+      }
+
+      const yearStr = date.getFullYear().toString().slice(2);
+
+      return `${dateStr}.${monthStr}.${yearStr}`;
+    } catch (e) {
+      console.log('date parse error');
+      return dateString;
+    }
+  }
 
   onApplyFilters() {
     this.saveFiltersToLocalStore()
@@ -270,7 +295,7 @@ export class OrdersBoardComponent implements OnInit {
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
-        orderitems => this.orders = orderitems.value,
+        orderitems => this.orders = orderitems.value.map(o => {o.OrderDate = this.dateFormat(o.OrderDate); return o; }),
         error => console.log(`Fetch orderitems error: ${error.message}`)
       );
   }
@@ -287,7 +312,7 @@ export class OrdersBoardComponent implements OnInit {
       .map(res => res.json())
       .subscribe(
         // convert to dropdown required format
-        orderitems => this.orders = orderitems.value,
+        orderitems => this.orders = orderitems.value.map(o => {o.OrderDate = this.dateFormat(o.OrderDate); return o; }),
         error => console.log(`Fetch orderitems error: ${error.message}`)
       );
   }
@@ -367,7 +392,7 @@ export class OrdersBoardComponent implements OnInit {
     Clipboard.copy(this.tableToCSV());
   }
 
-  public tableToCSV() {
+  tableToCSV() {
         let data = this.dataTable.filteredValue || this.dataTable.value;
         // let csv = '\ufeff';
         let csv = '';
