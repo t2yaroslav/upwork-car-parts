@@ -315,20 +315,23 @@ export class OrdersBoardComponent implements OnInit {
   }
 
   onApplyFilters() {
-    this.saveFiltersToLocalStore()
-    console.log('onApplyFilters');
-    let filtersStr = this.prepareOdataFilterString();
-    if (filtersStr !== '') {
-       filtersStr =  `$filter=${filtersStr}`;
-    }
 
-    this.http.get(`${this.apiPrefix}/OrderItems?${filtersStr}`, this.authHeader())
-      .map(res => res.json())
-      .subscribe(
-        // convert to dropdown required format
-        orderitems => this.orders = orderitems.value.map(o => {o.OrderDate = this.dateFormat(o.OrderDate); return o; }),
-        error => console.log(`Fetch orderitems error: ${error.message}`)
-      );
+    this.saveFiltersToLocalStore();
+    this.loadData();
+
+    // console.log('onApplyFilters');
+    // let filtersStr = this.prepareOdataFilterString();
+    // if (filtersStr !== '') {
+    //    filtersStr =  `$filter=${filtersStr}`;
+    // }
+
+    // this.http.get(`${this.apiPrefix}/OrderItems?${filtersStr}`, this.authHeader())
+    //   .map(res => res.json())
+    //   .subscribe(
+    //     // convert to dropdown required format
+    //     orderitems => this.orders = orderitems.value.map(o => {o.OrderDate = this.dateFormat(o.OrderDate); return o; }),
+    //     error => console.log(`Fetch orderitems error: ${error.message}`)
+    //   );
   }
 
   loadOrdersLazy(event) {
@@ -340,23 +343,49 @@ export class OrdersBoardComponent implements OnInit {
       localStorage.setItem('sortField', event.sortField);
     }
 
-    console.log(this.dataTable.rows);
-    // console.log(this.dataTable.roes);
+    this.loadData();
+//     console.log(this.dataTable.rows);
+//     // console.log(this.dataTable.roes);
+
+//     let filtersStr = this.prepareOdataFilterString();
+//     if (filtersStr !== '') {
+//        filtersStr =  `$filter=${filtersStr}`;
+//     }
+
+//     let orderString = '';
+//     if (event.sortField) {
+//       orderString = `$orderby=${event.sortField} ${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+//     }
+
+// this.http.get(`${this.apiPrefix}/OrderItems?
+// ${filtersStr}&
+// $top=${event.rows}&
+// $skip=${event.first}&
+// ${orderString}`, this.authHeader())
+//       .map(res => res.json())
+//       .subscribe(
+//         // convert to dropdown required format
+//         orderitems => this.orders = orderitems.value.map(o => {o.OrderDate = this.dateFormat(o.OrderDate); return o; }),
+//         error => console.log(`Fetch orderitems error: ${error.message}`)
+//       );
+  }
+
+  loadData() {
+    console.log('page ' + this.dataTable.pageLinks);
+    let orderString = '';
+    if (this.dataTable.sortField) {
+      orderString = `&$orderby=${this.dataTable.sortField} ${this.dataTable.sortOrder === 1 ? 'asc' : 'desc'}`;
+    }
 
     let filtersStr = this.prepareOdataFilterString();
     if (filtersStr !== '') {
-       filtersStr =  `$filter=${filtersStr}`;
+       filtersStr =  `$filter=${filtersStr}&`;
     }
 
-    let orderString = '';
-    if (event.sortField) {
-      orderString = `$orderby=${event.sortField} ${event.sortOrder === 1 ? 'asc' : 'desc'}`;
-    }
-
-this.http.get(`${this.apiPrefix}/OrderItems?
-${filtersStr}&
-$top=${event.rows}&
-$skip=${event.first}&
+    this.http.get(`${this.apiPrefix}/OrderItems?
+${filtersStr}
+$top=${this.dataTable.rows}&
+$skip=${this.dataTable.first}
 ${orderString}`, this.authHeader())
       .map(res => res.json())
       .subscribe(

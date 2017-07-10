@@ -1,5 +1,5 @@
 <div class="ui-g">
-  <div class="ui-g-3" [hidden]="isResponsiveFlag && !checked">
+  <div class="ui-g-12 ui-md-3 ui-lg-3" [hidden]="isResponsiveFlag && !checked">
     <!--<div class="ontop container">
       <div class="row">
 
@@ -11,21 +11,21 @@
       <p-toolbar [style]="{'height':'100%'}">
         <!--<div class="pre-scrollable" style="height:100%;min-height:100%;">-->
           <label> Suppliers </label>
-          <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple" filter="filter"
+          <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
             (onChange)="onChangeSuppliersFilter($event)" [style]="{'width':'100%'}">
           </p-listbox>
 
 
           <!--Statuses filter-->
           <label> Statuses </label>
-          <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple" filter="filter"
+          <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
             (onChange)="onChangeStatusesFilter($event)" [style]="{'width':'100%'}">
           </p-listbox>
 
 
           <!--Customers filter-->
           <label> Customers</label>
-          <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple" filter="filter"
+          <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
             (onChange)="onChangeCustomersFilter($event)" [style]="{'width':'100%'}">
           </p-listbox>
 
@@ -34,12 +34,15 @@
     </div>
   </div>
 
-  <div [ngClass]="{'ui-g-9': (!isResponsiveFlag || checked)}">
+  <div [ngClass]="{'ui-g-12 ui-md-9 ui-lg-9': (!isResponsiveFlag || checked)}">
     <p-toolbar>
       <div class="ui-toolbar-group-left">
         <span [hidden]="!(isResponsiveFlag)">
-          <p-toggleButton [(ngModel)]="checked"
-          onLabel="&nbsp;" offLabel="&nbsp;" onIcon="fa-bars"  offIcon="fa-bars" [style]="{'float':'left'}"></p-toggleButton>
+          <button pButton  icon="fa-bars" (click)="checked=!checked" class="btn btn-primary" style="padding:3.5px 12px">
+            <!--<i class="fa fa-bars" aria-hidden="true"></i>-->
+          </button>
+          <!--<p-toggleButton [(ngModel)]="checked"
+          onLabel="&nbsp;" offLabel="&nbsp;" onIcon="fa-bars"  offIcon="fa-bars" [style]="{'float':'left'}"></p-toggleButton>-->
         </span>
         <!--<span [hidden]="isResponsiveFlag">
           <button  type="text" pButton label="Apply filters" icon="fa-filter" iconPos="left" (click)="onApplyFilters()" style="float: left;"></button>
