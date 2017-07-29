@@ -17,7 +17,7 @@ import {PaginatorModule} from 'primeng/primeng';
 
 @Injectable()
 export class MyODataConfig extends ODataConfiguration {
-    baseUrl= 'http://dev.avtokompaniya.ru/api/';
+    baseUrl= 'https://cat.avtokompaniya.ru/api/';
 }
 
 @NgModule({
@@ -45,11 +45,6 @@ export class MyODataConfig extends ODataConfiguration {
     PaginatorModule,
     ToggleButtonModule
   ],
-  // providers: [ { provide: ODataConfiguration, useFactory: () => { 
-  //       const odta = new ODataConfiguration();
-  //       odta.baseUrl = 'http://dev.avtokompaniya.ru/api/';
-  //       return odta; }
-  //   }, ODataServiceFactory ],
   providers: [ ],
   bootstrap: [AppComponent]
 })

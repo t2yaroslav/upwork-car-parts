@@ -15,7 +15,6 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
 
   tokenUrl = 'https://cat.avtokompaniya.ru/api/Token';
-  // tokenUrl = 'http://dev.avtokompaniya.ru/api/Token';
   constructor(private http: Http, private router: Router) { }
 
   ngOnInit() {

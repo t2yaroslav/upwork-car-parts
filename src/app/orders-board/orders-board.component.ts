@@ -38,7 +38,6 @@ export class OrdersBoardComponent implements OnInit {
   orderStatusesDropBox: any = [];
 
   apiPrefix = 'https://cat.avtokompaniya.ru/api';
-  // apiPrefix = 'http://dev.avtokompaniya.ru/api';
   authKey;
   isResponsiveFlag = false;
   userName;
@@ -193,7 +192,7 @@ export class OrdersBoardComponent implements OnInit {
 
   onStatusChange(order) {
     console.log('onStatusChange');
-    this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {Status: order.Status}, this.authHeader())
+    this.http.patch(`${this.apiPrefix}/OrderItems(${order.Id})`, {Status: order.Status}, this.authHeader())
             .map(res => res.json())
             .subscribe(
               resp => console.log(`update seccess : ${resp}`),
@@ -204,7 +203,7 @@ export class OrdersBoardComponent implements OnInit {
         element => {
           element.Status = order.Status;
           // send changes to server;
-          this.http.patch(`${this.apiPrefix}/OrderItems/${element.Id}`, {Status: element.Status}, this.authHeader())
+          this.http.patch(`${this.apiPrefix}/OrderItems(${element.Id})`, {Status: element.Status}, this.authHeader())
             .map(res => res.json())
             .subscribe(
               resp => console.log(`update seccess : ${resp}`),
@@ -217,7 +216,7 @@ export class OrdersBoardComponent implements OnInit {
   onPriceChange(order) {
     console.log('onPriceChange');
     console.log(JSON.stringify(order));
-    this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {Price: order.Price}, this.authHeader())
+    this.http.patch(`${this.apiPrefix}/OrderItems(${order.Id})`, {Price: order.Price}, this.authHeader())
     .map(res => res.json())
     .subscribe(
       resp => console.log(`update seccess : ${resp}`),
@@ -230,7 +229,7 @@ export class OrdersBoardComponent implements OnInit {
 
     console.log('onPriceVendorChange');
     console.log(JSON.stringify(order));
-    this.http.patch(`${this.apiPrefix}/OrderItems/${order.Id}`, {PriceVendor: order.PriceVendor}, this.authHeader())
+    this.http.patch(`${this.apiPrefix}/OrderItems(${order.Id})`, {PriceVendor: order.PriceVendor}, this.authHeader())
     .map(res => res.json())
     .subscribe(
       resp => console.log(`update seccess : ${resp}`),
