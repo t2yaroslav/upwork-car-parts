@@ -1,8 +1,22 @@
 .nowrap{
-    white-space:nowrap;
+    white-space: nowrap;
 }
 
 .ui-listbox-list {
     overflow-x: auto;
     white-space: nowrap;
+}
+
+body
+{
+    font-size: 12px;
+}
+
+.ui-listbox .ui-listbox-item {
+    padding: 0px;
+}
+
+.ui-datatable .ui-datatable-thead>tr>th, .ui-datatable .ui-datatable-tfoot>tr>td, .ui-datatable .ui-datatable-data>tr>td {
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
