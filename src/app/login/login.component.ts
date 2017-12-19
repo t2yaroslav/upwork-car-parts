@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Http, RequestOptions, Headers} from '@angular/http';
+import { Http, RequestOptions, Headers} from '@angular/http';
 import { Router } from '@angular/router';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   loginError = false;
   errorMessage = '';
 
-  tokenUrl = 'https://cat.avtokompaniya.ru/api/Token';
+  tokenUrl = 'http://cat.avtokompaniya.ru/api/Token';
   constructor(private http: Http, private router: Router) { }
 
   ngOnInit() {
