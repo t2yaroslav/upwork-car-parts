@@ -14,4 +14,5 @@ export interface Order {
     Comment;
     CustomerId;
     SuppliersId;
+    Card1c
 }

@@ -405,7 +405,8 @@ ${orderString}`, this.authHeader())
     //var data = dataSrc.map()
     if (data && data.length > 0) {
       //keysArray = Object.keys(data[0]);
-        keysArray.push("");
+        keysArray.push("Card1c");
+        keysArray.push("Customer");
         keysArray.push("Suppliers");
         keysArray.push("Code");
         keysArray.push("Brand");
@@ -419,7 +420,6 @@ ${orderString}`, this.authHeader())
         keysArray.push("CustomerId");
         keysArray.push("OrderId");
         keysArray.push("Id");
-
     }
 
     const ws = {};
