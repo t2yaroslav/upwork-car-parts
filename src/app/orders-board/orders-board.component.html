@@ -10,22 +10,22 @@
     <div >
       <p-toolbar [style]="{'height':'100%'}">
         <!--<div class="pre-scrollable" style="height:100%;min-height:100%;">-->
-          <label> Поставщики </label>
-          <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
-            (onChange)="onChangeSuppliersFilter($event)" [style]="{'width':'100%'}">
-          </p-listbox>
-          <p></p>
-          <!--Statuses filter-->
-          <label> Статусы </label>
-          <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
-            (onChange)="onChangeStatusesFilter($event)" [style]="{'width':'100%'}">
-          </p-listbox>
-          <p></p>
-          <!--Customers filter-->
-          <label> Клиенты </label>
-          <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
-            (onChange)="onChangeCustomersFilter($event)" [style]="{'width':'100%'}">
-          </p-listbox>
+        <label> Поставщики </label>
+        <p-listbox [options]="suppliersFilter" [(ngModel)]="suppliersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
+                   (onChange)="onChangeSuppliersFilter($event)" [style]="{'width':'100%'}">
+        </p-listbox>
+        <p></p>
+        <!--Statuses filter-->
+        <label> Статусы </label>
+        <p-listbox [options]="statusesFilter" [(ngModel)]="statusesFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
+                   (onChange)="onChangeStatusesFilter($event)" [style]="{'width':'100%'}">
+        </p-listbox>
+        <p></p>
+        <!--Customers filter-->
+        <label> Клиенты </label>
+        <p-listbox [options]="customersFilter" [(ngModel)]="customersFilterSelected" multiple="multiple" checkbox="checkbox" filter="filter"
+                   (onChange)="onChangeCustomersFilter($event)" [style]="{'width':'100%'}">
+        </p-listbox>
         <!--</div>-->
       </p-toolbar>
     </div>
@@ -57,7 +57,7 @@
           <!--<button class="btn" [cbContent]="'target string'">Copy to clipboard</button>-->
 
           <!--<div  class="col-sm-4">-->
-            <div style="float:right;">{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+          <div style="float:right;">{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
           <!--</div>-->
         </div>
       </div>
@@ -65,10 +65,10 @@
     <!--scrollable="true" scrollHeight="550px"-->
     <!--[rows]="10"-->
     <p-dataTable id="ordersTable" [value]="orders"  [paginator]="true" [rowsPerPageOptions]="rowsPerPageOptions" [(selection)]="selectedOrders" (onRowSelect)="onSelectionChange()"
-      (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders" [lazy]="true" [totalRecords]="totalOrders"
-      (onLazyLoad)="loadOrdersLazy($event)" [responsive]="true" [stacked]="isResponsiveFlag" [style]="{'width':'100%'}">
+                 (onRowUnselect)="onSelectionChange()" dataKey="Id" [editable]="true" #dt exportFilename="orders" [lazy]="true" [totalRecords]="totalOrders"
+                 (onLazyLoad)="loadOrdersLazy($event)" [responsive]="true" [stacked]="isResponsiveFlag" [style]="{'width':'100%'}">
       <p-column [style]="{'width':'3%'}" selectionMode="multiple"></p-column>
-      <p-column [sortable]="true" field="Suppliers" [style]="{'white-space': 'nowrap','overflow': 'hidden', 'width':'10%'}" header="Поставщик"></p-column>
+      <p-column [sortable]="true" field="Id" [style]="{'overflow': 'hidden', 'visible': 'hidden'}" header="Id"></p-column>
       <p-column [sortable]="true" field="Code" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Код"></p-column>
       <p-column [sortable]="true" field="Brand" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Бренд"></p-column>
       <p-column [sortable]="true" [styleClass]="nowrap" [style]="{'width':'20%'}" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}" field="Name" header="Название"></p-column>
@@ -83,7 +83,8 @@
           <input type="text" pInputText (keyup.enter)="onPriceVendorChange(order)" [(ngModel)]="order[col.field]"/>
         </ng-template>
       </p-column>
-      <p-column [sortable]="true" field="OrderDate" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Дата"></p-column>
+      <p-column [sortable]="true" field="CountVendor" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Кол-во у поставщика"></p-column>
+      <p-column [sortable]="true" field="DeliveryTime" [style]="{'text-align': 'center', 'overflow': 'hidden'}" header="Время доставки"></p-column>
       <p-column [sortable]="true" field="Status" header="Статус" [editable]="true" [style]="{'white-space': 'nowrap','overflow':'visible', 'width':'6%'}">
         <ng-template let-col let-order="rowData" pTemplate="editor">
           <p-dropdown [(ngModel)]="order[col.field]" [options]="orderStatusesDropBox" [autoWidth]="false" [style]="{'width':'100%'}"
@@ -91,14 +92,11 @@
           </p-dropdown>
         </ng-template>
       </p-column>
-      
-      <p-column [sortable]="true" field="CountVendor" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Кол-во у поставщика"></p-column>
-      <p-column [sortable]="true" field="DeliveryTime" [style]="{'text-align': 'center', 'overflow': 'hidden'}" header="Время доставки"></p-column>
       <p-column [sortable]="true" field="OrderId" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Id заказа"></p-column>
-     
+      <p-column [sortable]="true" field="OrderDate" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Дата"></p-column>
       <p-column [sortable]="true" field="Customer" [style]="{'white-space': 'nowrap', 'overflow': 'hidden', 'width':'10%'}" header="Клиент"></p-column>
+      <p-column [sortable]="true" field="Suppliers" [style]="{'white-space': 'nowrap','overflow': 'hidden', 'width':'10%'}" header="Поставщик"></p-column>
       <p-column [sortable]="true" field="Comment" [style]="{'white-space': 'nowrap', 'overflow': 'hidden'}"  header="Ком-рий"></p-column>
-      <p-column [sortable]="true" field="Id" [style]="{'overflow': 'hidden', 'visible': 'hidden'}" header="Id"></p-column>
     </p-dataTable>
   </div>
 </div>

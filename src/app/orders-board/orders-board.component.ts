@@ -3,10 +3,9 @@ import { Component, OnInit, ViewChild , ChangeDetectorRef,ViewEncapsulation} fro
 import {CheckboxModule, DropdownModule, ToolbarModule, PaginatorModule} from 'primeng/primeng';
 import {DataTableModule, DataTable, SharedModule, ListboxModule, OverlayPanelModule, ChipsModule} from 'primeng/primeng';
 import {Order} from '../models/order';
-import { Http, JsonpModule, RequestOptions, Headers, RequestMethod } from '@angular/http';
-import { Router } from '@angular/router';
+import {Http, JsonpModule, RequestOptions, Headers, RequestMethod } from '@angular/http';
+import {Router } from '@angular/router';
 import {Clipboard} from 'ts-clipboard';
-
 declare var XLSX;
 declare var Workbook;
 declare var saveAs;
@@ -403,8 +402,24 @@ ${orderString}`, this.authHeader())
 
   sheetFromArrayOfArrays(data: Order[], opts = null) {
     let keysArray = [];
+    //var data = dataSrc.map()
     if (data && data.length > 0) {
-      keysArray = Object.keys(data[0]);
+      //keysArray = Object.keys(data[0]);
+        keysArray.push("");
+        keysArray.push("Suppliers");
+        keysArray.push("Code");
+        keysArray.push("Brand");
+        keysArray.push("Name");
+        keysArray.push("Count");
+        keysArray.push("Price");
+        keysArray.push("Price");
+        keysArray.push("PriceVendor");
+        keysArray.push("OrderDate");
+        keysArray.push("Status");
+        keysArray.push("CustomerId");
+        keysArray.push("OrderId");
+        keysArray.push("Id");
+
     }
 
     const ws = {};
@@ -416,8 +431,8 @@ ${orderString}`, this.authHeader())
         if (range.s.c > C) {range.s.c = C; }
         if (range.e.r < R) {range.e.r = R; }
         if (range.e.c < C) {range.e.c = C; }
+        
         const cell = {v: data[R][keysArray[C]] , t: '', z: ''};
-
         if (cell.v == null) {continue; }
         const cell_ref = XLSX.utils.encode_cell({c: C, r: R});
 
@@ -448,7 +463,7 @@ ${orderString}`, this.authHeader())
     };
     const ws = this.sheetFromArrayOfArrays(this.orders);
 
-    const ws_name = 'vlad';
+    const ws_name = 'export';
     /* add worksheet to workbook */
     wb.SheetNames.push(ws_name);
     wb.Sheets[ws_name] = ws;
@@ -462,7 +477,7 @@ ${orderString}`, this.authHeader())
       };
       return buf;
     }
-    saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'test.xlsx');
+    saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'export.xlsx');
   }
 
   onCopyToClipboard() {
